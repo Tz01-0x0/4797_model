@@ -16,7 +16,7 @@ GitHub renders the LaTeX in this file natively (MathJax). For a local preview us
 | $u_{c,t}\in\{0,1\}$ | input: cue $c$ predicted the correct option on trial $t$ |
 | $d_{c,t}\in\{L,R\}$ | direction in which cue $c$ points on trial $t$ |
 | $y_t\in\{0,1\}$ | response: $1$ if participant chose left |
-| $\mathbf{x}_{c,t}$ = ($x_{1,c,t}$, $x_{2,c,t}$, $x_{3,c,t}$) | hidden states (Levels 1–3) for stream $c$ |
+| **x**<sub>c,t</sub> = (x<sub>1,c,t</sub>, x<sub>2,c,t</sub>, x<sub>3,c,t</sub>) | hidden states (Levels 1–3) for stream $c$ |
 | $\mu_{k,c,t},\;\sigma^2_{k,c,t}$ | posterior mean and variance at level $k$ |
 | $\hat\mu_{k,c,t},\;\hat\pi_{k,c,t}$ | predictive (pre-update) mean and precision |
 | $\delta_{k,c,t}$ | prediction error at level $k$ |
@@ -101,7 +101,7 @@ $$
 \forall\,t,\quad \text{update facial states using } u_{f,t}\text{ regardless of }g_t.
 $$
 
-**Architecture B (Separated).** Three facial HGFs $\{\mathbf{x}^{(g)}_{f,t}\}_{g=1}^{3}$ sharing $(\kappa_f,\omega_f,\vartheta_f)$. Only the active EG is updated:
+**Architecture B (Separated).** Three facial HGFs $\mathbf{x}^{(g)}_{f,t}$ (one per equivalence group, $g = 1, 2, 3$) sharing $\kappa_f$, $\omega_f$, $\vartheta_f$. Only the active EG is updated:
 
 $$
 \mathbf{x}^{(g)}_{f,t}=\begin{cases}\text{HGF update with }u_{f,t},& g=g_t,\\\\\mathbf{x}^{(g)}_{f,t-1},& g\neq g_t.\end{cases}
@@ -237,7 +237,7 @@ Decisive support is taken as $\varphi_m>0.95$.
 
 | File | Implements |
 | --- | --- |
-| `Response_Models/softmax_facial_verbal.m` | Choice likelihood Pr(y_t=1 | θ) = s(β^eff_t · v_t) with precision-weighted left-belief b^L_t. |
+| `Response_Models/softmax_facial_verbal.m` | Choice likelihood $\Pr(y_t=1 \mid \boldsymbol\theta) = s(\beta^{\mathrm{eff}}_t v_t)$ with precision-weighted left-belief $b^L_t$. |
 | `Response_Models/softmax_facial_verbal_config.m` | Prior on $(\zeta,\beta)$ in log space. |
 | `softmax_facial_verbal_transp.m`, `_namep.m` | Native-space transform, parameter labels. |
 
