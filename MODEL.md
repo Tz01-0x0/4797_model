@@ -310,7 +310,6 @@ The minimal path through the report is **steps 1, 2, 5, 6, 7, 8a, 8b, 9, 10**; s
 | --- | --- | --- |
 | Table 1 (descriptives) | step 7 | `data/figures/` |
 | Figure 1 (task design) | static — produced by a one-off utility not included in the repo | report PDF only |
-| Figure 2 (trial structure) | hand-drawn / external | — |
 | Table 2 (BMS) | step 2 (`BMS_results.mat`) | `hgf_model/results/` |
 | Table 3 (MAP estimates) | step 2 | `MLTM_MAP_estimates.csv` |
 | Table 4 (Group × Condition ANOVA) | step 8b | `hgf_model/results/` and console |
