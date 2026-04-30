@@ -112,6 +112,7 @@ $$
 $$
 x_{3,f,t}\text{ shared},\qquad x_{2,f,t}^{(g)}\text{ EG-specific},\qquad g\in\{1,2,3\}.
 $$
+
 The active EG's Level-2 prediction error drives the shared $x_{3,f,t}$ update; inactive EGs' Level-2 states carry forward but inherit the updated shared volatility on their next prediction.
 
 **Model M4 (Generalisation strength $\gamma$).** Architecture A extended with a free $\gamma\in[0,1]$ that scales the Level-2 update applied to the shared facial belief:
@@ -119,6 +120,7 @@ The active EG's Level-2 prediction error drives the shared $x_{3,f,t}$ update; i
 $$
 \mu_{2,f,t}=\hat\mu_{2,f,t}+\gamma\,\frac{1}{\pi_{2,f,t}}\,\delta_{1,f,t}.
 $$
+
 $\gamma\to 1$ recovers Arch A; $\gamma\to 0$ approaches behavioural independence across EGs.
 
 ### 2.3 Initial-condition (I1) variants
@@ -127,9 +129,9 @@ Three further variants of Architecture A free the Level-2 priors:
 
 | Variant | Free initials | # extra perceptual params |
 | --- | --- | --- |
-| `I1_Mean` | $\mu_{2,f,0},\;\mu_{2,v,0}$ | $+2$ |
-| `I1_Precision` | $\sigma^2_{2,f,0},\;\sigma^2_{2,v,0}$ | $+2$ |
-| `I1_Both` | $\mu_{2,f,0},\sigma^2_{2,f,0},\mu_{2,v,0},\sigma^2_{2,v,0}$ | $+4$ |
+| `I1_Mean` | μ_{2,f,0}, μ_{2,v,0} | +2 |
+| `I1_Precision` | σ²_{2,f,0}, σ²_{2,v,0} | +2 |
+| `I1_Both` | μ_{2,f,0}, σ²_{2,f,0}, μ_{2,v,0}, σ²_{2,v,0} | +4 |
 
 ---
 
@@ -216,7 +218,7 @@ Decisive support is taken as $\varphi_m>0.95$.
 
 | File | Implements |
 | --- | --- |
-| `data_cleaning/comprehensive_cleaning_pipeline.py` | Reads raw Gorilla CSVs → trial-level `*_cleaned.csv` and HGF-ready `*_hgf_input.csv` (columns $u_{f,t},u_{v,t},d_{f,t},d_{v,t}$, card values, $g_t$). Scores AQ50, DASS21, demographics; assigns $\{ASD, NT\}$. |
+| `data_cleaning/comprehensive_cleaning_pipeline.py` | Reads raw Gorilla CSVs → trial-level `*_cleaned.csv` and HGF-ready `*_hgf_input.csv` (columns u_f, u_v, d_f, d_v, card values, g_t). Scores AQ50, DASS21, demographics; assigns ASD/NT. |
 | `data_cleaning/data_cleaning_pipeline.py` | Single-file equivalent (also imported as a module by `run_all_cleaning.py`). |
 | `data_cleaning/run_all_cleaning.py` | Batch driver over the participant list in `data/participant_metadata.csv`. |
 
@@ -226,16 +228,16 @@ Decisive support is taken as $\varphi_m>0.95$.
 | --- | --- |
 | `Perceptual_Models/hgf_binary3l_facial_verbal.m` | Architecture A (unified facial HGF). |
 | `Perceptual_Models/hgf_binary3l_facial_verbal_archB.m` | Architecture B (3 separated facial HGFs sharing $\kappa_f,\omega_f,\vartheta_f$). |
-| `Perceptual_Models/hgf_binary3l_facial_verbal_archC.m` | Architecture C (shared $x_{3,f}$, separate $x^{(g)}_{2,f}$). |
+| `Perceptual_Models/hgf_binary3l_facial_verbal_archC.m` | Architecture C (shared Level-3 volatility x_{3,f}, separate Level-2 beliefs x^(g)_{2,f}). |
 | `Perceptual_Models/hgf_binary3l_facial_verbal_gamma.m` | M4 (Architecture A + free $\gamma$). |
 | `*_config.m`, `*_transp.m`, `*_namep.m` | Priors $p(\boldsymbol\theta\mid m)$, parameter transforms, parameter labels for each of the above. |
-| `*_I1mean_config.m`, `*_I1precision_config.m`, `*_I1both_config.m` | I1 variant prior specifications (free initial $\mu_{2,c,0}$ and/or $\sigma^2_{2,c,0}$). |
+| `*_I1mean_config.m`, `*_I1precision_config.m`, `*_I1both_config.m` | I1 variant prior specifications (free initial μ_{2,c,0} and/or σ²_{2,c,0}). |
 
 ### 5.3 Response model (MATLAB)
 
 | File | Implements |
 | --- | --- |
-| `Response_Models/softmax_facial_verbal.m` | $\Pr(y_t=1\mid\boldsymbol\theta)=s(\beta^{\mathrm{eff}}_{t}\,v_t)$ with precision-weighted $b^{L}_{t}$. |
+| `Response_Models/softmax_facial_verbal.m` | Choice likelihood Pr(y_t=1 | θ) = s(β^eff_t · v_t) with precision-weighted left-belief b^L_t. |
 | `Response_Models/softmax_facial_verbal_config.m` | Prior on $(\zeta,\beta)$ in log space. |
 | `softmax_facial_verbal_transp.m`, `_namep.m` | Native-space transform, parameter labels. |
 
@@ -255,7 +257,7 @@ Decisive support is taken as $\varphi_m>0.95$.
 | `MLTM_options_new.m` | Paths, model space $\{m_1,\dots,m_4\}$, parameter labels, SPM12 setup. |
 | `MLTM_main_new.m` | Wrapper: first-level inversion + second-level analysis. |
 | `MLTM_main_I1.m` | Same wrapper restricted to the I1 model space. |
-| `MLTM_load_gorilla.m` | Trial-level CSV → $(\mathbf{u}_i,\mathbf{y}_i,\text{metadata})$ for `fitModel`. |
+| `MLTM_load_gorilla.m` | Trial-level CSV → (u_i, y_i, metadata) for `fitModel`. |
 | `MLTM_invert_subject_new.m` | Loop: fit every $(m_{\mathrm{prc}},m_{\mathrm{obs}})$ pair to every subject. |
 | `MLTM_extractLME_new.m` | Build $\mathbf{F}\in\mathbb{R}^{N\times M}$. |
 | `MLTM_model_selection_new.m` | `spm_BMS(F)` → $\langle r_m\rangle,\varphi_m$, log-Bayes factor plots. |
@@ -263,10 +265,10 @@ Decisive support is taken as $\varphi_m>0.95$.
 | `MLTM_extract_parameters_new.m` | Save MAP parameter table + AQ-on-parameters GLM. |
 | `MLTM_load_parameters_new.m`, `MLTM_load_zeta_new.m`, `MLTM_load_groups.m` | Per-subject MAP and group-label loaders. |
 | `MLTM_second_level_new.m` | Sequencer for the four group-level steps. |
-| `MLTM_group_comparison.m` | Parameter-level $2\times 2$ Group $\times$ Condition ANOVA (Type III SS), $t$-tests, Cohen's $d$, partial correlations $r(\mathrm{AQ},\hat\theta_p\mid \mathrm{Cond})$ — **produces Table 4 of the report.** |
+| `MLTM_group_comparison.m` | Parameter-level 2 × 2 Group × Condition ANOVA (Type III SS), t-tests, Cohen's d, partial correlations r(AQ, θ̂_p | Condition) — **produces Table 4 of the report.** |
 | `MLTM_parameter_recovery.m` | Simulation–recovery on the winning model. |
-| `MLTM_laplace_kappa_theta.m` | Per-subject $\mathrm{corr}(\kappa,\vartheta)$ from $\mathbf{C}_i$ — flat-likelihood vs. ridge diagnostic. |
-| `MLTM_I1_analysis.m` | Group comparison and AQ correlations on $\hat\mu_{2,c,0},\hat\sigma^2_{2,c,0}$ from `I1_Both`. |
+| `MLTM_laplace_kappa_theta.m` | Per-subject corr(κ, ϑ) from the Laplace correlation matrix C_i — flat-likelihood vs. ridge diagnostic. |
+| `MLTM_I1_analysis.m` | Group comparison and AQ correlations on initial-condition parameters μ̂_{2,c,0}, σ̂²_{2,c,0} from `I1_Both`. |
 
 ### 5.6 Group-level statistics (MATLAB + Python)
 
@@ -275,9 +277,9 @@ Decisive support is taken as $\varphi_m>0.95$.
 | `analysis/MLTM_sample_characterisation.m` | Table 1 (descriptives, Welch's $t$, Cohen's $d$). |
 | `analysis/MLTM_demographics.m` | Demographic equivalence (age, FI, gender) + clinical comparisons (AQ50 subscales, DASS21) + behavioural Group $\times$ Condition. |
 | `analysis/MLTM_stratified_AQ_analysis.m` | Condition-stratified zero-order $r$(AQ, parameter) — **produces Table 5 of the report.** |
-| `analysis/MLTM_sensitivity_analysis.m` | Re-run after $|z|>2.5$ exclusion — including outlier identification, used in the report sensitivity analysis. |
+| `analysis/MLTM_sensitivity_analysis.m` | Re-run after \|z\| > 2.5 outlier exclusion — including outlier identification, used in the report sensitivity analysis. |
 
-**Note on canonical sources.** All statistical analyses cited in the report (Tables 1–5, BMS, parameter recovery, Laplace $\kappa\!\leftrightarrow\!\vartheta$, stratified AQ correlations, sensitivity analysis) are produced by the **MATLAB** scripts. Python is used only for the data-cleaning pipeline.
+**Note on canonical sources.** All statistical analyses cited in the report (Tables 1–5, BMS, parameter recovery, Laplace κ↔ϑ, stratified AQ correlations, sensitivity analysis) are produced by the **MATLAB** scripts. Python is used only for the data-cleaning pipeline.
 
 ---
 
@@ -287,16 +289,16 @@ All commands assume the working directory is the repository root (`4797_model/`)
 
 | # | Command | Produces | Corresponds to |
 | --- | --- | --- | --- |
-| 1 | `python data_cleaning/comprehensive_cleaning_pipeline.py` | `data/cleaned/<pid>_cleaned.csv`, `data/cleaned/<pid>_hgf_input.csv`, `data/participant_metadata.csv`, `data/quality_report.csv`, `data/cleaning_report.txt`, `data/pid_lookup_PRIVATE.csv` (gitignored) | trial-level $(\mathbf{u}_i,\mathbf{y}_i,g_t,d_{c,t},\dots)$ + $(\mathrm{AQ},\mathrm{DASS},\dots)$ |
-| 2 | `MLTM_main_new` (MATLAB, in `hgf_model/`) | `hgf_model/results/<pid>_<m_prc>_<m_obs>.mat` (one per subject × model), `models_F_values.mat`, `BMS_results.mat`, `MLTM_MAP_estimates.csv`, `BMS_*.png`, `parameter_correlations.png` | $\hat{\boldsymbol\theta}_i^{(m)}$, $F_{i,m}$, $\langle r_m\rangle,\varphi_m$, identifiability check |
+| 1 | `python data_cleaning/comprehensive_cleaning_pipeline.py` | `data/cleaned/<pid>_cleaned.csv`, `data/cleaned/<pid>_hgf_input.csv`, `data/participant_metadata.csv`, `data/quality_report.csv`, `data/cleaning_report.txt`, `data/pid_lookup_PRIVATE.csv` (gitignored) | trial-level (u_i, y_i, g_t, d_{c,t}, …) + (AQ, DASS, …) |
+| 2 | `MLTM_main_new` (MATLAB, in `hgf_model/`) | `hgf_model/results/<pid>_<m_prc>_<m_obs>.mat` (one per subject × model), `models_F_values.mat`, `BMS_results.mat`, `MLTM_MAP_estimates.csv`, `BMS_*.png`, `parameter_correlations.png` | per-subject MAP estimates θ̂_i^(m), log-evidence F_{i,m}, model posterior ⟨r_m⟩ and exceedance φ_m, identifiability check |
 | 3 | `MLTM_main_I1` (MATLAB) | `hgf_model/results_I1/<pid>_<I1variant>_<m_obs>.mat`, BMS over `ArchA`, `I1_Mean`, `I1_Precision`, `I1_Both` | initial-condition variant comparison |
-| 4 | `MLTM_I1_analysis` (MATLAB, after step 3) | `hgf_model/results_I1/I1_Both_MAP_estimates.csv`, group/AQ comparison report | post-hoc on $(\hat\mu_{2,c,0},\hat\sigma^2_{2,c,0})$ |
-| 5 | `MLTM_parameter_recovery` (MATLAB, after step 2) | `hgf_model/results/parameter_recovery_results.mat`, `_report.txt`, `_scatter.png` | recovery $r_{\hat\theta\to\tilde\theta}$ for each parameter |
-| 6 | `MLTM_laplace_kappa_theta(MLTM_options_new())` (MATLAB) | `hgf_model/results/laplace_kappa_theta.csv`, `_hist.png`, `.txt` | per-subject $\mathrm{corr}(\kappa_c,\vartheta_c)$ flat-vs-ridge diagnostic |
+| 4 | `MLTM_I1_analysis` (MATLAB, after step 3) | `hgf_model/results_I1/I1_Both_MAP_estimates.csv`, group/AQ comparison report | post-hoc on initial Level-2 mean μ̂_{2,c,0} and variance σ̂²_{2,c,0} |
+| 5 | `MLTM_parameter_recovery` (MATLAB, after step 2) | `hgf_model/results/parameter_recovery_results.mat`, `_report.txt`, `_scatter.png` | simulation-recovery Pearson r per parameter |
+| 6 | `MLTM_laplace_kappa_theta(MLTM_options_new())` (MATLAB) | `hgf_model/results/laplace_kappa_theta.csv`, `_hist.png`, `.txt` | per-subject corr(κ_c, ϑ_c) flat-vs-ridge diagnostic |
 | 7 | `MLTM_sample_characterisation` (MATLAB, in `analysis/`) | Table 1 figure + console paragraph | sample descriptives |
 | 8a | `MLTM_demographics` (MATLAB, in `analysis/`) | demographic and clinical comparison console output (no figures) | Table 1 territory (demographic equivalence + AQ subscales + DASS21) |
-| 8b | `MLTM_group_comparison(MLTM_options_new())` (MATLAB, in `hgf_model/`; **also runs automatically as the final step of `MLTM_main_new`**) | parameter ANOVA console output + boxplots | **Table 4** ($2\times 2$ Group $\times$ Condition on $\hat\theta$) |
-| 9 | `MLTM_stratified_AQ_analysis` (MATLAB) | `hgf_model/results_stratified/*.csv` | condition-stratified $r(\mathrm{AQ},\hat\theta)$ on Arch A and I1\_Both |
+| 8b | `MLTM_group_comparison(MLTM_options_new())` (MATLAB, in `hgf_model/`; **also runs automatically as the final step of `MLTM_main_new`**) | parameter ANOVA console output + boxplots | **Table 4** (2 × 2 Group × Condition on θ̂) |
+| 9 | `MLTM_stratified_AQ_analysis` (MATLAB) | `hgf_model/results_stratified/*.csv` | condition-stratified r(AQ, θ̂) on Arch A and `I1_Both` |
 | 10 | `MLTM_sensitivity_analysis` (MATLAB) | `hgf_model/results/sensitivity_analysis_report.txt` | full-vs-reduced sample contrasts |
 The minimal path through the report is **steps 1, 2, 5, 6, 7, 8a, 8b, 9, 10**; steps 3–4 are needed for the I1 supplementary analysis. The task-design figure (Figure 1 in the report) was generated separately by a one-off MATLAB utility that does not ship with the repo.
 
@@ -316,5 +318,5 @@ The minimal path through the report is **steps 1, 2, 5, 6, 7, 8a, 8b, 9, 10**; s
 | Figure 3 (dimensional + categorical) | step 8b / step 9 | `data/figures/` |
 | I1-variant analysis | steps 3–4 | `hgf_model/results_I1/` |
 | Parameter recovery | step 5 | `hgf_model/results/` |
-| Laplace $\kappa$–$\vartheta$ correlations | step 6 | `hgf_model/results/` |
+| Laplace κ–ϑ correlations | step 6 | `hgf_model/results/` |
 | Sensitivity analysis | step 10 | `hgf_model/results/sensitivity_analysis_report.txt` |
