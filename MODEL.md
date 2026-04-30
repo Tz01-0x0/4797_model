@@ -56,29 +56,35 @@ $$
 $$
 
 **Level 1 prediction error** (Bernoulli):
+
 $$
 \delta_{1,c,t} \;=\; u_{c,t}-s(\hat\mu_{2,c,t}).
 $$
 
 **Level 2 update.** With Bernoulli precision $\hat\pi_{1,c,t}=s(\hat\mu_{2,c,t})\bigl(1-s(\hat\mu_{2,c,t})\bigr)$,
+
 $$
 \pi_{2,c,t} \;=\; \hat\pi_{2,c,t}+\hat\pi_{1,c,t}, \qquad
 \mu_{2,c,t} \;=\; \hat\mu_{2,c,t}+\frac{1}{\pi_{2,c,t}}\,\delta_{1,c,t}.
 $$
 
 **Level 2 volatility prediction error** $\delta_{2,c,t}$ and weights $w_{2,c,t}, r_{2,c,t}$:
+
 $$
 \delta_{2,c,t}=\frac{\sigma^2_{2,c,t}+\bigl(\mu_{2,c,t}-\hat\mu_{2,c,t}\bigr)^2}{\sigma^2_{2,c,t-1}+\nu_{2,c,t}}-1,
 $$
+
 $$
 w_{2,c,t}=\frac{\nu_{2,c,t}}{\sigma^2_{2,c,t-1}+\nu_{2,c,t}}, \qquad
 r_{2,c,t}=\frac{\nu_{2,c,t}-\sigma^2_{2,c,t-1}}{\sigma^2_{2,c,t-1}+\nu_{2,c,t}}.
 $$
 
 **Level 3 update.**
+
 $$
 \pi_{3,c,t}=\hat\pi_{3,c,t}+\tfrac{1}{2}\kappa_c^{2}\,w_{2,c,t}^{2}\bigl(1+r_{2,c,t}\,\delta_{2,c,t}\bigr)-\tfrac{1}{2}\kappa_c^{2}\,w_{2,c,t}^{2}\,\delta_{2,c,t},
 $$
+
 $$
 \mu_{3,c,t}=\mu_{3,c,t-1}+\frac{\kappa_c}{2\,\pi_{3,c,t}}\,w_{2,c,t}\,\delta_{2,c,t}.
 $$
@@ -90,22 +96,26 @@ The coupling $\kappa_c$ is the central quantity in HA1: it scales how strongly p
 The verbal stream is identical across all four architectures. Only the facial side differs.
 
 **Architecture A (Unified, baseline).** A single facial HGF that ignores the EG identifier:
+
 $$
 \forall\,t,\quad \text{update facial states using } u_{f,t}\text{ regardless of }g_t.
 $$
 
 **Architecture B (Separated).** Three facial HGFs $\{\mathbf{x}^{(g)}_{f,t}\}_{g=1}^{3}$ sharing $(\kappa_f,\omega_f,\vartheta_f)$. Only the active EG is updated:
+
 $$
 \mathbf{x}^{(g)}_{f,t}=\begin{cases}\text{HGF update with }u_{f,t},& g=g_t,\\[2pt]\mathbf{x}^{(g)}_{f,t-1},& g\neq g_t.\end{cases}
 $$
 
 **Architecture C (Hybrid).** A *shared* Level-3 volatility state across EGs but *separate* Level-2 accuracy beliefs:
+
 $$
 x_{3,f,t}\text{ shared},\qquad x_{2,f,t}^{(g)}\text{ EG-specific},\qquad g\in\{1,2,3\}.
 $$
 The active EG's Level-2 prediction error drives the shared $x_{3,f,t}$ update; inactive EGs' Level-2 states carry forward but inherit the updated shared volatility on their next prediction.
 
 **Model M4 (Generalisation strength $\gamma$).** Architecture A extended with a free $\gamma\in[0,1]$ that scales the Level-2 update applied to the shared facial belief:
+
 $$
 \mu_{2,f,t}=\hat\mu_{2,f,t}+\gamma\,\frac{1}{\pi_{2,f,t}}\,\delta_{1,f,t}.
 $$
@@ -126,16 +136,19 @@ Three further variants of Architecture A free the Level-2 priors:
 ## 3. Response model — precision-weighted integration
 
 Let $\hat b_{c,t}=s(\hat\mu_{2,c,t})$ be the predicted probability that cue $c$ correctly indicates the higher-value option. The probability that cue $c$ points to the *left* being correct is
+
 $$
 \hat b^{L}_{c,t} \;=\; \mathbb{1}[d_{c,t}=L]\,\hat b_{c,t} + \mathbb{1}[d_{c,t}=R]\,\bigl(1-\hat b_{c,t}\bigr).
 $$
 
 **Cue precisions** (Fisher information of the Bernoulli at $\hat b_{c,t}$):
+
 $$
 \pi^{\,\mathrm{cue}}_{c,t} \;=\; \bigl[\hat b_{c,t}\,(1-\hat b_{c,t})\bigr]^{-1}.
 $$
 
 **Weights** (with native-space $e^\zeta$ on facial precision):
+
 $$
 w_{f,t}=\frac{e^{\zeta}\pi^{\,\mathrm{cue}}_{f,t}}{e^{\zeta}\pi^{\,\mathrm{cue}}_{f,t}+\pi^{\,\mathrm{cue}}_{v,t}},
 \qquad
@@ -143,6 +156,7 @@ w_{v,t}=\frac{\pi^{\,\mathrm{cue}}_{v,t}}{e^{\zeta}\pi^{\,\mathrm{cue}}_{f,t}+\p
 $$
 
 **Combined left-belief:**
+
 $$
 b^{L}_{t} \;=\; w_{f,t}\,\hat b^{L}_{f,t} + w_{v,t}\,\hat b^{L}_{v,t},
 \qquad
@@ -150,11 +164,13 @@ v_t \;=\; 2\,b^{L}_{t}-1.
 $$
 
 **Volatility-modulated inverse temperature** (symmetric across cue streams):
+
 $$
 \beta^{\mathrm{eff}}_{t} \;=\; \beta\,\exp\!\bigl(-\hat\mu_{3,f,t}-\hat\mu_{3,v,t}\bigr).
 $$
 
 **Choice likelihood:**
+
 $$
 \Pr(y_t=1\mid \boldsymbol\theta) \;=\; s\!\bigl(\beta^{\mathrm{eff}}_{t}\,v_t\bigr).
 $$
