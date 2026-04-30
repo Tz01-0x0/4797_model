@@ -104,7 +104,7 @@ $$
 **Architecture B (Separated).** Three facial HGFs $\{\mathbf{x}^{(g)}_{f,t}\}_{g=1}^{3}$ sharing $(\kappa_f,\omega_f,\vartheta_f)$. Only the active EG is updated:
 
 $$
-\mathbf{x}^{(g)}_{f,t}=\begin{cases}\text{HGF update with }u_{f,t},& g=g_t,\\[2pt]\mathbf{x}^{(g)}_{f,t-1},& g\neq g_t.\end{cases}
+\mathbf{x}^{(g)}_{f,t}=\begin{cases}\text{HGF update with }u_{f,t},& g=g_t,\\\\\mathbf{x}^{(g)}_{f,t-1},& g\neq g_t.\end{cases}
 $$
 
 **Architecture C (Hybrid).** A *shared* Level-3 volatility state across EGs but *separate* Level-2 accuracy beliefs:
@@ -289,7 +289,7 @@ All commands assume the working directory is the repository root (`4797_model/`)
 | --- | --- | --- | --- |
 | 1 | `python data_cleaning/comprehensive_cleaning_pipeline.py` | `data/cleaned/<pid>_cleaned.csv`, `data/cleaned/<pid>_hgf_input.csv`, `data/participant_metadata.csv`, `data/quality_report.csv`, `data/cleaning_report.txt`, `data/pid_lookup_PRIVATE.csv` (gitignored) | trial-level $(\mathbf{u}_i,\mathbf{y}_i,g_t,d_{c,t},\dots)$ + $(\mathrm{AQ},\mathrm{DASS},\dots)$ |
 | 2 | `MLTM_main_new` (MATLAB, in `hgf_model/`) | `hgf_model/results/<pid>_<m_prc>_<m_obs>.mat` (one per subject × model), `models_F_values.mat`, `BMS_results.mat`, `MLTM_MAP_estimates.csv`, `BMS_*.png`, `parameter_correlations.png` | $\hat{\boldsymbol\theta}_i^{(m)}$, $F_{i,m}$, $\langle r_m\rangle,\varphi_m$, identifiability check |
-| 3 | `MLTM_main_I1` (MATLAB) | `hgf_model/results_I1/<pid>_<I1variant>_<m_obs>.mat`, BMS over $\{\text{ArchA}, \text{I1\_Mean}, \text{I1\_Precision}, \text{I1\_Both}\}$ | initial-condition variant comparison |
+| 3 | `MLTM_main_I1` (MATLAB) | `hgf_model/results_I1/<pid>_<I1variant>_<m_obs>.mat`, BMS over `ArchA`, `I1_Mean`, `I1_Precision`, `I1_Both` | initial-condition variant comparison |
 | 4 | `MLTM_I1_analysis` (MATLAB, after step 3) | `hgf_model/results_I1/I1_Both_MAP_estimates.csv`, group/AQ comparison report | post-hoc on $(\hat\mu_{2,c,0},\hat\sigma^2_{2,c,0})$ |
 | 5 | `MLTM_parameter_recovery` (MATLAB, after step 2) | `hgf_model/results/parameter_recovery_results.mat`, `_report.txt`, `_scatter.png` | recovery $r_{\hat\theta\to\tilde\theta}$ for each parameter |
 | 6 | `MLTM_laplace_kappa_theta(MLTM_options_new())` (MATLAB) | `hgf_model/results/laplace_kappa_theta.csv`, `_hist.png`, `.txt` | per-subject $\mathrm{corr}(\kappa_c,\vartheta_c)$ flat-vs-ridge diagnostic |
