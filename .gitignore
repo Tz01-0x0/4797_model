@@ -1,0 +1,44 @@
+# Raw Gorilla exports — NEVER commit (contain Prolific Public IDs)
+data/raw_gorilla/
+
+# Anonymisation lookup — NEVER commit (Prolific PID -> P###)
+data/pid_lookup_PRIVATE.csv
+
+# Legacy draft outputs from older versions of the cleaning pipeline.
+# The current pipeline writes canonical labels directly to participant_metadata.csv
+# (see README "Group columns and canonical-label override"), so .draft.csv files
+# should not be produced any more. Kept here as a safety net.
+data/*.draft.csv
+
+# The rest of data/ — cleaned/, participant_metadata.csv, quality_report.csv,
+# cleaning_report.txt — is intentionally tracked because it is fully anonymised
+# (P### labels only) and is what reviewers use when they skip the cleaning step.
+
+# Model fits and results — too large for git; reviewer regenerates with MATLAB
+hgf_model/results/
+hgf_model/results_I1/
+hgf_model/results_stratified/
+figures/
+
+# MATLAB
+*.asv
+*.m~
+*.mat
+slprj/
+
+# Personal one-off utilities (not part of the analysis pipeline)
+/MLTM_volatility_figure.m
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
