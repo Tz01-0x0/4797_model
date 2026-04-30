@@ -16,7 +16,7 @@ GitHub renders the LaTeX in this file natively (MathJax). For a local preview us
 | $u_{c,t}\in\{0,1\}$ | input: cue $c$ predicted the correct option on trial $t$ |
 | $d_{c,t}\in\{L,R\}$ | direction in which cue $c$ points on trial $t$ |
 | $y_t\in\{0,1\}$ | response: $1$ if participant chose left |
-| $\mathbf{x}_{c,t}=(x_{1,c,t},x_{2,c,t},x_{3,c,t})$ | hidden states (Levels 1–3) for stream $c$ |
+| **x**\_{c,t} = (x\_{1,c,t}, x\_{2,c,t}, x\_{3,c,t}) | hidden states (Levels 1–3) for stream $c$ |
 | $\mu_{k,c,t},\;\sigma^2_{k,c,t}$ | posterior mean and variance at level $k$ |
 | $\hat\mu_{k,c,t},\;\hat\pi_{k,c,t}$ | predictive (pre-update) mean and precision |
 | $\delta_{k,c,t}$ | prediction error at level $k$ |
@@ -265,7 +265,7 @@ Decisive support is taken as $\varphi_m>0.95$.
 | `MLTM_extract_parameters_new.m` | Save MAP parameter table + AQ-on-parameters GLM. |
 | `MLTM_load_parameters_new.m`, `MLTM_load_zeta_new.m`, `MLTM_load_groups.m` | Per-subject MAP and group-label loaders. |
 | `MLTM_second_level_new.m` | Sequencer for the four group-level steps. |
-| `MLTM_group_comparison.m` | Parameter-level 2 × 2 Group × Condition ANOVA (Type III SS), t-tests, Cohen's d, partial correlations r(AQ, θ̂_p | Condition) — **produces Table 4 of the report.** |
+| `MLTM_group_comparison.m` | Parameter-level 2 × 2 Group × Condition ANOVA (Type III SS), t-tests, Cohen's d, partial correlations r(AQ, θ̂_p) controlling for Condition — **produces Table 4 of the report.** |
 | `MLTM_parameter_recovery.m` | Simulation–recovery on the winning model. |
 | `MLTM_laplace_kappa_theta.m` | Per-subject corr(κ, ϑ) from the Laplace correlation matrix C_i — flat-likelihood vs. ridge diagnostic. |
 | `MLTM_I1_analysis.m` | Group comparison and AQ correlations on initial-condition parameters μ̂_{2,c,0}, σ̂²_{2,c,0} from `I1_Both`. |
